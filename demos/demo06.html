@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绘制弧形</title>
+    <style>
+        .main{
+            width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <canvas id="elm"></canvas>
+
+    <script>
+        (function(){
+            var canvas=document.querySelector('#elm');
+            var ctx=canvas.getContext('2d');
+            canvas.width=600;
+            canvas.height=600;
+            canvas.style.border='1px solid #000';
+
+            //ctx.arc(x,y,r,startAngle,andAngle,counterclockwise)
+            //x,y圆心的左边
+            //r圆的半径
+            //startAngle，andAngle开始和结束的角度，注意是弧度π,
+            //JS里是：Math.PI
+            //counterclockwise：是否是逆时针。true是逆时针，false：顺时针
+
+            //弧度和角度的转换方式
+            //180度=Math.PI
+            //如：60度 ：60*Math.PI / 180
+
+
+            ctx.moveTo(300,300);
+            ctx.arc(300,300,100,0*Math.PI/180,60*Math.PI/180,true);//默认是false可以不写
+            //true/false是不一样的
+            ctx.closePath();
+//            ctx.fill();
+            ctx.stroke();
+        })()
+    </script>
+</div>
+</body>
+</html>
