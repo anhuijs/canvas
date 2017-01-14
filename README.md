@@ -90,7 +90,7 @@
 + 解释：根据路径绘制线。路径只是草稿，真正绘制线必须执行stroke
 
 #### 2、4、6  绘制的基本步骤
-+ 第一步获得canvas元素=>canvas=document.getElementById('elm');
++ 第一步获得canvas元素=>canvasElem=document.getElementById('cavsElem');或者其他API
 + 第二步：获得上下文 =>canvasElem.getContext('2d');
 + 第三步：开始路径规划 =>ctx.beginPath()
 + 第四步：移动起始点 =>ctx.moveTo(x, y)
@@ -156,3 +156,13 @@
 ![弧度](./img/arc.gif)
 + 绘制弧形如：demo06.html
 + 绘制饼状图如：demo07.html
+
+###2、5、1 javascript中的数学计算Math.sin(弧度)和Math.cos(弧度)
++ 几何数学中是实际的度数
++ JS中是需要转换为弧度去计算，
++ 例：求下图中A点的坐标，已知A点距离原点的距离：r+20,以及A点与水平线的夹角为30度，canvas中水平线网上为负的度数
+![计算](./img/Mathsin-and-Mathcos.png)
+
+### 2、6 绘制文字
+
+sin48=x/y,x=sin48*y
