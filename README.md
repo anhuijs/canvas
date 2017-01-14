@@ -64,4 +64,95 @@
 ```
 ###2、4 canvas基本的绘制路径***
 ####2、4、1 canvas坐标系
-![坐标系](./img/canvas-x-y.png.png)
+![坐标系](./img/canvas-x-y.png)
+
+####2、4、2  设置绘制起点moveTo(x,y)
++ 语法：ctx.moveTo(x, y);
++ 解释：设置上下文绘制路径的起点。相当于移动画笔到某个位置
++ 参数：x,y 都是相对于 canvas盒子的最左上角
++ 注意：**绘制线段前必须先设置起点，不然绘制无效。**
+
+####2、4、3  绘制直线lineTo
++ 语法：ctx.lineTo(x, y);
++ 解释：从x,y的位置绘制一条直线到起点或者上一个线头点
++ 参数：x,y 线头点坐标
++ 绘制五子棋棋盘如：demo02.html
++ 绘制简单的折线图表如：demo03.html
+
+####2、4、4 路径的开始和闭合
++ 开始路径：ctx.beginPath();
++ 闭合路径：ctx.closePath();
++ 解释：如果复杂路径绘制，必须使用路径开始和结束。闭合路径会自动把最后的线头和开始的线头连在一起
++ beginPath: 核心的作用是将 不同绘制的形状进行隔离，每次执行此方法，表示重新绘制一个路径,跟之前的绘制的墨迹可以进行分开样式设置和管理
+
+#### 2、4、5  描边stroke()
++ 语法：ctx.stroke();
++ 解释：根据路径绘制线。路径只是草稿，真正绘制线必须执行stroke
+
+#### 2、4、6  绘制的基本步骤
++ 第一步获得canvas元素=>canvas=document.getElementById('elm');
++ 第二步：获得上下文 =>canvasElem.getContext('2d');
++ 第三步：开始路径规划 =>ctx.beginPath()
++ 第四步：移动起始点 =>ctx.moveTo(x, y)
++ 第五步：绘制线(矩形、圆形、图片...) =>ctx.lineTo(x, y)
++ 第六步：闭合路径 =>ctx.closePath();
++ 第七步：绘制描边 =>ctx.stroke();
+
+```
+    html部分：
+        <canvas id="cavsElem">
+            你的浏览器不支持canvas，请升级浏览器
+        </canvas>
+
+    javascript部分：
+
+    //===============基本绘制api====================
+    //获得画布
+    var canvas = document.querySelector('#cavsElem');
+    var ctx = canvas.getContext('2d');  //获得上下文
+
+    canvas.width = 900;     //设置标签的属性宽高
+    canvas.height = 600;    //千万不要用 canvas.style.height
+    canvas.style.border = "1px solid #000";
+
+    //绘制三角形
+    ctx.beginPath();        //开始路径
+    ctx.moveTo(100,100);    //三角形，左顶点
+    ctx.lineTo(300, 100);   //右顶点
+    ctx.lineTo(300, 300);   //底部的点
+    ctx.closePath();        //结束路径
+    ctx.stroke();           //描边路径
+```
+####  2、4、7 填充 fill()
++ 语法：ctx.fill(); 
++ 解释：填充，是将闭合的路径的内容填充具体的颜色。默认黑色。
++ 如demo01.html
+
+####  2、4、8 快速创建矩形的方法rect()
++ 语法：ctx.rect(x, y, width, height);
++ 解释：x, y是矩形左上角坐标， width和height都是以像素计
++ rect方法只是规划了矩形的路径，并没有填充和描边。
++ 如demo05.html
+
+#### 2、4、9 快速创建描边矩形和填充矩形strokeRect()
++ 语法： ctx.strokeRect(x, y, width, height);
++ 语法：ctx.fillRect(x, y, width, height);
++ 如demo05.html
+
+#### 2、4、10清除矩形 clearRect()
++ 语法：ctx.clearRect(x, y, width, hegiht);
++ 解释：清除某个矩形内的绘制的内容，相当于橡皮擦
++ 如demo05.html
+
+###2、5 绘制圆形arc(),arc() 方法创建弧/曲线（用于创建圆或部分圆）
++ 语法：ctx.arc(x,y,r,sAngle,eAngle,counterclockwise);
++ x,y：圆心坐标
++ r：半径大小
++ sAngle:绘制开始的角度。 圆心到最右边点是0度，顺时针方向弧度增大
++ eAngel:结束的角度，注意是弧度。π
++ counterclockwise：是否是逆时针。true是逆时针，false：顺时针
++ 弧度和角度的转换公式： rad = deg*Math.PI/180;如：45度=45*Math.PI/180
++ 在Math提供的方法中sin、cos等都使用的弧度 
+![弧度](./img/arc.gif)
++ 绘制弧形如：demo06.html
++ 绘制饼状图如：demo07.html
