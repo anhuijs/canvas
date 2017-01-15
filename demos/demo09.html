@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>绘制饼状图带文字</title>
+    <title>绘制饼状图以及文字</title>
     <style>
         .main{
             width: 600px;
@@ -25,13 +25,13 @@
             //1 绘制饼状图
             var data=[
                 {
-                    "value":.3,
-                    "color":'red',
+                    "value":.2,
+                    "color":'#41C1FA',
                     "title":"Html"
                 },
                 {
                     "value":.2,
-                    "color":'blue',
+                    "color":'#0E6DB0',
                     "title":"CSS"
                 },
                 {
@@ -40,9 +40,24 @@
                     "title":"PHP"
                 },
                 {
-                    "value":.4,
+                    "value":.15,
                     "color":'purple',
                     "title":"Javascript"
+                },
+                {
+                    "value":.13,
+                    "color":'red',
+                    "title":"VUE"
+                },
+                {
+                    "value":.11,
+                    "color":'blue',
+                    "title":"angular.1.0"
+                },
+                {
+                    "value":.11,
+                    "color":'#999',
+                    "title":"React"
                 }
             ];
             // 生活中都是从竖直方向顺时针开始
@@ -65,12 +80,15 @@
 
                 //2、 绘制文字
                 ctx.font = '20px "微软雅黑"';
-                var text=data[i].value*100+'%';
+                var text=data[i].title+' '+data[i].value*100+'%';//将要绘制的文字
                 var x1,y1;
+                // 计算文字要放的角度，每次放一次会变化
                 var textangle=tempangle+ 1/2*angle;
+                // 计算文字的坐标
                 x1=x+Math.cos(textangle*Math.PI/180)*(radius+20);
                 y1=y+Math.sin(textangle*Math.PI/180)*(radius+20);
                 //2、1在90度-270度之间文
+                //如果文字在圆形左侧那就文字结尾对其当前坐标
                 if(textangle>90&&textangle<270){
                     ctx.textAlign='end';
                 }
@@ -81,7 +99,9 @@
                 //每次累加tempangle
                 tempangle+=angle;
             }
-
+            var ss=ctx.measureText('你好我是jask');
+            console.log(ss);
+            console.log(ss.width);
         })()
     </script>
 </div>

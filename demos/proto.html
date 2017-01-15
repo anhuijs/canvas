@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>proto-prototype</title>
+    <style>
+        h3{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h3>看console</h3>
+<script>
+//    function Dog(){
+//        this.name='xxxx';
+//        this.age=10;
+//        this.sad=function(){console.log(this.age)}
+//    }
+//    var dog1=new Dog();
+//    //dog1的 私有属性
+//    dog1.name='dog1';
+//    dog1.age=20;
+//    dog1.sad();
+//    var dog2=new Dog();
+//    // dog2的 属性
+//    dog2.name='dog2';
+//    dog2.age=100;
+//    dog2.sad();
+//    //1 实例对象dog1和dog2的公用方法 speak
+//    Dog.prototype.speak=function(){
+//        console.log('I am '+this.name+' '+'今年 :'+this.age);
+//    }
+//    dog1.speak();
+//    dog2.speak();
+
+    //2 上面的升级版本
+//    function Dog(usename,age){
+//        this.name=usename;
+//        this.age=age;
+//        this.sad=function(){console.log(this.age)}
+//    }
+//    Dog.prototype.speak=function(){
+//        console.log('I am '+this.name+' '+'今年 :'+this.age);
+//    }
+//    var dog1=new Dog('dog1',20);
+//    var dog2=new Dog('dog2',100);
+//    dog1.sad();
+//    dog2.sad();
+//
+//    dog1.speak();
+//    dog2.speak();
+
+
+    //3 再升级版本
+//    function Dog(option){
+//        this.name=option.name;
+//        this.age=option.age;
+//        this.sad=function(){console.log(this.age)}
+//    }
+//    Dog.prototype.speak=function(){
+//        console.log('I am '+this.name+' '+'今年 :'+this.age);
+//    }
+//    var dog1=new Dog({name:'dog1',age:20});
+//    var dog2=new Dog({name:'dog2',age:100});
+//
+//    dog1.sad();
+//    dog2.sad();
+//
+//    dog1.speak();
+//    dog2.speak();
+
+    //4 还可以再次升级
+    function Dog(option){
+        this.init(option);
+    }
+    //重新设定原型
+    Dog.prototype={
+        init:function(option){
+            this.age=option.age||'';
+            this.name=option.name||'';
+            this.sad=function(){
+                console.log(this.age);
+            }
+        },
+        speak:function(){
+            console.log('I am '+this.name+' '+'今年 :'+this.age);
+        }
+    }
+
+    var dog1=new Dog({name:'dog1',age:20});
+    var dog2=new Dog({name:'dog2',age:100});
+
+    dog1.sad();
+    dog2.sad();
+
+    dog1.speak();
+    dog2.speak();
+</script>
+</body>
+</html>

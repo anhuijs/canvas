@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>绘制简单的折线图表</title>
     <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
         .main{
             width: 600px;
             margin: 0 auto;
@@ -13,6 +17,7 @@
 <body>
     <div class="main">
         <canvas id="elm"></canvas>
+        <p id="point"></p>
     </div>
     <script>
         (function(){
@@ -88,6 +93,22 @@
 
             ctx.strokeStyle='#e4393c';
             ctx.stroke();
+
+            //4、鼠标移动获得坐标,是鼠标相对于页面的坐标
+            // 显示坐标的元素
+            var msg=document.getElementById('point');
+            // 获得坐标
+            function getCoordinates(e){
+                pointx= e.clientX;
+                pointy= e.clientY;
+                msg.innerHTML='坐标是： （'+pointx+','+pointy+")";
+            }
+            // 清除坐标
+            function clearCoordinates(){
+                msg.innerHTML='';
+            }
+            canvas.onmousemove=getCoordinates;
+            canvas.onmouseout=clearCoordinates;
 
         })()
     </script>
