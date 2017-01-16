@@ -226,7 +226,8 @@
 + 面向过程按钮控制：动画帧demo13.html
 
 ###JS中创建对象的方式!!重要****
-+ 1:JSON格式的方式（key:value）
++ 1:JSON格式的方式（key:value）javascript Object Notation
++ 缺点：不能把JSON对象当成一个模板，进行new操作
 
 ```javascript
 
@@ -253,25 +254,28 @@
 
 ```javascript
 	
-	//构造函数Dog()
-	function Dog(){
+	//构造函数Person(),默认return this
+	function Person(){
 		this.name='xxxx';
 		this.age=10;
 		this.sad=function(){console.log(this.age)}
+		this.speak=function(){
+            console.log('I am '+this.name+' '+'今年 :'+this.age);
+        }
 	}
-	var dog1=new Dog();
-	dog1.age=20;
-	dog1.sad();//20
-	//1 new操作符 :的内部原理
+	var person1=new Person();
+	person1.age=20;
+	person1.sad();//20
+	//注意 new操作符 :的内部原理
 		1：创建一个空对象
 		2：把this指向到这个空对象
-		3：把空对象的内部原型指向构造函数的原型对象
+		3：把空对象的内部原型(proto)指向构造函数的原型(prototype)对象
 		4：当前构造函数执行完成后，如果没有return的话，就会把当前的空对象返回，一般都没有return
-	//1 new操作符原理：执行的时候类似在构造函数Dog()内部，过程可以如下去理解，实际不是！！
-	function Dog(){
+	//注意 new操作符原理：执行的时候类似在构造函数Person()内部，过程可以如下去理解，实际不是！！
+	function Person(){
 		var tt={};
 		this=tt;
-		tt.__proto__=Dog.prototype;
+		tt.__proto__=Person.prototype;
 		this.name='xxxx';
 		this.age=10;
 		this.sad=function(){...}
@@ -279,41 +283,44 @@
 	}
 	//prototype只有函数才有的原型
 	//__proto__所有的对象都有的
-	dog1.__proto__===Dog.prototype;//true
-	dog1.prototype===Dog.prototype;//false
+	person1.__proto__===Person.prototype;//true
+	person1.prototype===Person.prototype;//false
+	person1===person2//false
 
-	var dog2=new Dog();
-	//可以把所有实例对象dog1、dog2...的公用方法封装到构造函数的的原型里面去,就可以减少空间
-	Dog.prototype.speak=function(){
+	var person2=new Person();
+	//可以把所有实例对象person1、person2...的公用方法封装到构造函数的的原型里面去,就可以减少空间
+	Person.prototype.speak=function(){
         console.log('I am '+this.name+' '+'今年 :'+this.age);
     }
-	dog2.name='dog2';
-	dog2.age=100;
-	dog2.sad();//100
-	dog2.speak();//I am dog2 今年 :100
+	person2.name='person2';
+	person2.age=100;
+	person2.sad();//100
+	person2.speak();//I am person2 今年 :100
 
 ```
 
-+ ![proto-prototype](./img/proto-prototype.png)
++ ![proto-prototype](./img/proto-prototype1.png)
 + 3.1  上面代码的升级版本
 
 ```javascript
 
-	function Dog(usename,age){
-        this.name=usename;
+	function Person(name,age){
+        this.name=name;
         this.age=age;
-        this.sad=function(){console.log(this.age)}
     }
-    Dog.prototype.speak=function(){
-        console.log('I am '+this.name+' '+'今年 :'+this.age);
+    //1 实例对象person1和person2的公用方法 speak
+	Person.prototype.said=function(){
+		console.log('This is '+this.name);
     }
-    var dog1=new Dog('dog1',20);
-    var dog2=new Dog('dog2',100);
-    dog1.sad();//20
-    dog2.sad();//100
-
-    dog1.speak();//I am dog1 今年 :20
-    dog2.speak();//I am dog2 今年 :100
+    Person.prototype.speak=function(){
+       console.log('I am '+this.name+'，今年 '+this.age);
+    }
+    var person1=new Person({name:'马云',age:40});
+    var person2=new Person({name:'王健林',age:50});
+    person1.said();//This is 马云
+    person2.said();//This is 王健林
+    person1.speak();//I am 马云，今年 40
+    person2.speak();//I am 王健林，今年 50
 
 ```
 
@@ -321,22 +328,22 @@
 
 ```javascript
 
-	function Dog(option){
+	function Person(option){
         this.name=option.name;
         this.age=option.age;
-        this.sad=function(){console.log(this.age)}
     }
-    Dog.prototype.speak=function(){
-        console.log('I am '+this.name+' '+'今年 :'+this.age);
+	Person.prototype.said=function(){
+		console.log('This is '+this.name);
     }
-    var dog1=new Dog({name:'dog1',age:20});
-    var dog2=new Dog({name:'dog2',age:100});
-
-    dog1.sad();//20
-    dog2.sad();//100
-
-    dog1.speak();//I am dog1 今年 :20
-    dog2.speak();//I am dog2 今年 :100
+    Person.prototype.speak=function(){
+       console.log('I am '+this.name+'，今年 '+this.age);
+    }
+    var person1=new Person({name:'马云',age:40});
+    var person2=new Person({name:'王健林',age:50});
+    person1.said();//This is 马云
+    person2.said();//This is 王健林
+    person1.speak();//I am 马云，今年 40
+    person2.speak();//I am 王健林，今年 50
 
 ```
 
@@ -344,34 +351,88 @@
 
 ```javascript
 
-	function Dog(option){
+	function Person(option){
         this.init(option);
     }
-    //重新设定原型
-    Dog.prototype={
+   	//重新设定原型
+    Person.prototype={
         init:function(option){
-            this.age=option.age||'';
             this.name=option.name||'';
-            this.sad=function(){
-                console.log(this.age);
-            }
+            this.age=option.age||'';
         },
+		said:function(){console.log('This is '+this.name);},
         speak:function(){
-            console.log('I am '+this.name+' '+'今年 :'+this.age);
+            console.log('I am '+this.name+'，今年 '+this.age);
         }
     }
-    var dog1=new Dog({name:'dog1',age:20});
-    var dog2=new Dog({name:'dog2',age:100});
-
-    dog1.sad();//20
-    dog2.sad();//100
-
-    dog1.speak();//I am dog1 今年 :20
-    dog2.speak();//I am dog2 今年 :100
+    var person1=new Person({name:'马云',age:40});
+    var person2=new Person({name:'王健林',age:50});
+    person1.said();//This is 马云
+    person2.said();//This is 王健林
+    person1.speak();//I am 马云，今年 40
+    person2.speak();//I am 王健林，今年 50
 
 ```
 
++ 总结：由于实例对象的内部原型proto都指向构造函数的原型prototype，所有的实例对象的公用属性和方法封装到构造函数的原型里面去
++ 如果实例对象设置一个跟原型对象相同属性的值，会自动添加一个实例对象自己的属性，读取属性时候先找自己的，没有的话再找原型的属性
 + 如：proto.html
++ 面向对象的使用如：prototype.html
+###函数的四种调用模式和其中的this指向
+
+```javascript
+	
+	//第一种：函数执行模式
+        function add(a,b){
+            console.log(this);
+            return a+b;
+        }
+        add(10,20)//this===window
+
+        //第二种：对象方法的调用模式
+        var obj={
+            name:'aaa',
+            age:20,
+            said:function(){
+                console.log(this);
+            }
+        }
+        obj.said();//this===obj，此处this指代被调用者
+        //所有的事件响应方法都是  对象方法调用模式
+
+
+        //第三种：构造器的调用模式
+        function School(){
+            this.said=function(){
+                console.log(this);
+            }
+        }
+        var nanj=new School();
+        nanj.said();//对象调用自己的方法，this===nanj
+
+
+        //第四种：call和apply调用模式
+        function change(a,b){
+            this.detial=a*b;
+            console.log(this);
+        }
+        var p={};
+        change.call(p,4,5);//此处的this===p
+        console.log(p.detial);
+        var q=[];
+        change.call(q,5,10)//this===q
+        console.log(q.detial);
+
+        //apply和call一样的用法，只不过apply第二个参数用数组进行传递
+        var arr=[];
+        change.apply(arr,[10,10]);//this===arr
+        console.log(arr.detial);
+
+        var str={};
+        change.apply(str,[20,20]);//this===str
+        console.log(str.detial);
+
+```
 
 + [proto与prototype区别-知乎](https://www.zhihu.com/question/34183746/answer/58068402)
 
