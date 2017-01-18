@@ -436,4 +436,130 @@
 
 + [proto与prototype区别-知乎](https://www.zhihu.com/question/34183746/answer/58068402)
 
+#三、canvas进阶
+##3.1 设置填充和描边的颜色
++ fillStyle : 设置或返回用于填充绘画的颜色
++ strokeStyle: 设置或返回用于笔触的颜色
++ 以上两个值都可以接受颜色名,16进制数据，rgb值，甚至rgba. 一般先进行设置样式然后进行绘制
 
+```javascript
+
+	ctx.strokeStyle = "red";      
+	ctx.strokeStyle = "#ccc";      
+	ctx.strokeStyle = "rgb(255,0,0)";      
+	ctx.strokeStyle = "rgba(255,0,0,6)";
+
+```
+
+##3.2  设置阴影(了解，少用，性能差)
++ 类比于CSS3的阴影
++ shadowColor ： 设置或返回用于阴影的颜色
++ shadowBlur ： 设置或返回用于阴影的模糊级别,大于1的正整数，数值越高，模糊程度越大
++ shadowOffsetX： 设置或返回阴影距形状的水平距离
++ shadowOffsetY： 设置或返回阴影距形状的垂直距离
++ 设置png图片的阴影，图片透明部分不会被投影
++ 如:demo16.html
+
+``` javascript
+
+	ctx.fillStyle = "rgba(255,0,0, .9)"
+    ctx.shadowColor = "teal";
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 10;
+    ctx.shadowOffsetY = 10;
+    ctx.fillRect(100, 100, 100, 100);
+
+```
+
+##3.3   复杂样式，创建线性渐变的样式(了解)
++ 一般不用，都是用图片代替，canvas绘制图片效率更高
++ 线性渐变可以用于 矩形、圆形、文字等颜色样式
++ 线性渐变是一个对象
++ 语法：ctx.createLinearGradient(x0,y0,x1,y1); //参数：x0,y0起始坐标，x1,y1结束坐标
++ 如:demo16.html
+
+```javascript
+
+	//创建线性渐变的对象，
+    var grd=ctx.createLinearGradient(0,0,170,0);
+	//添加一个渐变颜色，第一个参数介于 0.0 与 1.0 之间的值，
+	//表示渐变中开始与结束之间的位置。
+    grd.addColorStop(0,"black");  
+    grd.addColorStop(1,"white");  //添加一个渐变颜色
+    ctx.fillStyle =grd;           //关键点，把渐变设置到 填充的样式
+
+	
+```
+##3.4  设置圆形的线性渐变(了解)
++ 创建放射状/圆形渐变对象。可以填充文本、形状等
++ context.createRadialGradient(x0,y0,r0,x1,y1,r1);
++ radial 半径的；放射状的；光线的；光线状的 英 ['reɪdɪəl] 美 ['redɪəl]
++ x0: 渐变的开始圆的 x 坐标
++ y0: 渐变的开始圆的 y 坐标
++ r0: 开始圆的半径
++ x1: 渐变的结束圆的 x 坐标
++ y1: 渐变的结束圆的 y 坐标
++ r1: 结束圆的半径
++ demo16.html
+## 3.5  绘制背景图(了解)
++ •	ctx.createPattern(img,repeat) 方法在指定的方向内重复指定的元素了解
++ •	pattern：n. 模式；图案；样品 英 ['pæt(ə)n] 美 ['pætɚn]
++ •	第一参数：设置平铺背景的图片，第二个背景平铺的方式
++ o	image ： 规定要使用的图片、画布或视频元素
++ o	repeat ： 默认。该模式在水平和垂直方向重复
++ o	repeat-x ： 该模式只在水平方向重复
++ o	repeat-y ： 该模式只在垂直方向重复
++ o	no-repeat： 该模式只显示一次（不重复）
+
+```javascript
+	
+	var ctx=c.getContext("2d");
+    var img=document.getElementById("lamp");
+    var pat=ctx.createPattern(img,"repeat");
+    ctx.rect(0,0,150,100);
+    ctx.fillStyle=pat;//  把背景图设置给填充的样式
+    ctx.fill();
+
+```
+##3.6   变换***
+###3.6.1 缩放(***)
++ scale() 方法缩放当前绘图，更大或更小
++ 语法：context.scale(scalewidth,scaleheight)
++ scalewidth : 缩放当前绘图的宽度 (1=100%, 0.5=50%, 2=200%, 依次类推)
++ scaleheight : 缩放当前绘图的高度 (1=100%, 0.5=50%, 2=200%, etc.) +注意：缩放的是整个画布，缩放后，继续绘制的图形会被放大或缩小。
++ 如：demo17.html
+
+###3.6.2  位移(***)
++ •	ctx.translate(x,y) 方法重新映射画布上的 (0,0) 位置
++ •	x： 添加到水平坐标（x）上的值
++ •	y： 添加到垂直坐标（y）上的值
++ •	发生位移后，相当于把画布的0,0坐标 更换到新的x,y的位置，所有绘制的新元素都被影响。
++ •	位移画布一般配合缩放和旋转等。
++ 如：demo17.html
+
+###3.6.3  旋转(***)
++ •	context.rotate(angle); 方法旋转当前的绘图
++ •	注意参数是弧度（PI）
++ •	如需将角度转换为弧度，请使用 degrees*Math.PI/180 公式进行计算。
++ demo17.html
+
+##3.7 绘制环境的保存和还原（***）
++ ctx.save() 保存当前环境的状态，可以把当前绘制环境进行保存到缓存中
++ ctx.restore() 返回之前保存过的路径状态和属性，获取最近缓存的ctx
++ 一般配合位移画布使用
++ 如：demo17.html
+
+## 3.8 设置绘制环境的透明图(了解)
++ context.globalAlpha=number;
++ number:透明值。必须介于 0.0（完全透明） 与 1.0（不透明） 之间
++ 设置透明度是全局的透明度的样式。注意是全局的
+
+### 封装绘制矩形的原型方式,以及添加动画*****
++ demo18.html
+
+###封装绘制圆形的原型方式，以及添加动画*****
+>到底这里--------------------------------
+##  3.9 画布限定区域绘制(了解)
++ ctx.clip(); 方法从原始画布中剪切任意形状和尺寸
++ 一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内（不能访问画布上的其他区域）
++ 一般配合绘制环境的保存和还原。
