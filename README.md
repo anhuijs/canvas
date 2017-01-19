@@ -558,8 +558,66 @@
 + demo18.html
 
 ###封装绘制圆形的原型方式，以及添加动画*****
->到底这里--------------------------------
+
 ##  3.9 画布限定区域绘制(了解)
 + ctx.clip(); 方法从原始画布中剪切任意形状和尺寸
 + 一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内（不能访问画布上的其他区域）
 + 一般配合绘制环境的保存和还原。
+
+## 3.10  画布保存64位编码内容(****)
++ 把canvas绘制的内容输出成base64内容
++ 语法：canvas.toDataURL(type, encoderOptions);
++ 例如：canvas.toDataURL("image/jpg",1);
++ type，设置输出的类型，比如 image/png image/jpeg等
++ encoderOptions： 0-1之间的数字，用于标识输出图片的质量，1表示无损压缩，类型为： image/jpeg 或者image/webp才起作用
++ 如：
+
+```javascript
+
+	var canvas = document.getElementById("canvas");
+	var dataURL = canvas.toDataURL();
+	console.log(dataURL);
+
+	// "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNby
+    // blAAAADElEQVQImWNgoBMAAABpAAFEI8ARAAAAAElFTkSuQmCC"
+	
+	//拿到图片的dom对象
+	var img = document.querySelector("#img-demo");
+	//将画布的内容给图片标签显示
+	img.src = canvas.toDataURL("image/png"); 
+
+```
+## 3.11 画布渲染画布(****)
++ context.drawImage(img,x,y);
++ img参数也可以是画布，也就是把一个画布整体的渲染到另外一个画布上
++ 如：
+
+```javascript
+
+	var canvas1 = document.querySelector('#cavsElem1');
+    var canvas2 = document.querySelector('#cavsElem2');
+    var ctx1 = canvas1.getContext('2d');
+	var ctx2 = canvas2.getContext('2d');
+	//在第一个画布上绘制矩形
+    ctx1.fillRect(20, 20, 40, 40);      
+    //将第一个画布整体绘制到第二个画布上
+    ctx2.drawImage(canvas1, 10, 10); 
+
+```
+
+##3.12  线条样式(了解)
++ lineCap 设置或返回线条的结束端点(线头、线冒)样式
+	+ butt ： 默认。向线条的每个末端添加平直的边缘.	翻译.：屁股；烟头；笑柄；靶垛；粗大的一端 英 [bʌt] 美 [bʌt]
+	+ round ： 向线条的每个末端添加圆形线帽。
+	+ square： 向线条的每个末端添加正方形线帽
++ lineJoin 设置或返回两条线相交时，所创建的拐角类型
+	+ bevel: 创建斜角,	翻译. 斜角；斜面；[测] 斜角规 英 ['bev(ə)l] 美 ['bɛvl]
+	+ round: 创建圆角。
+	+ miter: 默认。创建尖角 
++ lineWidth 设置或返回当前的线条宽度
++ miterLimit 设置或返回最大斜接长度
+	+ 意思: 斜接 英 ['maɪtə]
+	+ 斜接长度指的是在两条线交汇处内角和外角之间的距离
+	+ 一般用默认值：10就可以了。除非需要特别长的尖角时，使用此属性
+
+##3.13  了解贝塞尔曲线
