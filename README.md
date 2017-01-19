@@ -555,9 +555,120 @@
 + 设置透明度是全局的透明度的样式。注意是全局的
 
 ### 封装绘制矩形的原型方式,以及添加动画*****
-+ demo18.html
+```javascript
+
+	/*
+	* 封装属性：
+	* 1: x,y,w,h,fillStyle,strokeStyle,rotation,opacity
+	* 封装行为
+	* 2:render
+	*
+	*
+	* */
+	
+	function ItcastRect(option){
+	    this._init(option);
+	}
+	ItcastRect.prototype={
+	    _init:function(option){
+	        this.x=option.x||0;
+	        this.y=option.y||0;
+	        this.w=option.w||0;
+	        this.h=option.h||0;
+	        this.rotation=option.rotation||0;
+	        this.opacity=option.opacity===0?0:option.opacity||1;
+	
+	        this.scaleX=option.scaleX||1;
+	        this.scaleY=option.scaleY||1;
+	
+	        this.strokeStyle=option.strokeStyle||'green';
+	        this.fillStyle=option.fillStyle||'red';
+	
+	    },
+	    render:function(ctx){
+	        ctx.save();//保存当前的状态
+	
+	        ctx.beginPath();
+	        ctx.translate(this.x,this.y);
+	        ctx.rotate(this.rotation*Math.PI/180);
+	        ctx.globalAlpha=this.opacity;
+	        ctx.scale(this.scaleX,this.scaleY);
+	        ctx.rect(0,0,this.w,this.h);
+	        ctx.fillStyle=this.fillStyle;
+	        ctx.fill();
+	
+	        ctx.strokeStyle=this.strokeStyle;
+	        ctx.stroke();
+	
+	        ctx.restore();//回归到最初的原始状态
+	    }
+	}
+
+```
+
++ 如demo18.html
 
 ###封装绘制圆形的原型方式，以及添加动画*****
+```javasript
+	
+	/*
+	* ctx.arc(x,y,r,startAngle,andAngle,counterclockwise)
+	 x,y圆心的左边
+	 r圆的半径
+	 startAngle，andAngle开始和结束的角度，注意是弧度π,
+	 JS里是：Math.PI
+	 counterclockwise：是否是逆时针。true是逆时针，false：顺时针
+	 弧度和角度的转换方式
+	 180度=Math.PI
+	 如：60度 ：60*Math.PI / 180
+	* */
+	function ItcastArc(option){
+	    this._init(option);
+	}
+	ItcastArc.prototype={
+	    _init:function(option){
+	        option=option||{};
+	        // 如果传入了0就是0，不是0就是option.x,或者不传就是100
+	        this.x=option.x===0?0:option.x||100;
+	        this.y=option.y===0?0:option.y||100;
+	        this.r=option.r||50;
+	        this.sAngle=option.sAngle===0?0:option.sAngle||0;
+	        this.eAngle=option.eAngle===0?0:option.eAngle||0;
+	        this.sAngle=this.sAngle*Math.PI/180;
+	        this.eAngle=this.eAngle*Math.PI/180;
+	        this.counterclockwise=option.counterclockwise===true?true:option.counterclockwise||false;
+	        //变换样式
+	        this.rotation=option.rotation===0?0:option.rotation||0;
+	        this.opacity=option.opacity===0?0:option.opacity||1;
+	        this.scaleX=option.scaleX||1;
+	        this.scaleY=option.scaleY||1;
+	        this.strokeStyle=option.strokeStyle||'green';
+	        this.strokeWidth = option.strokeWidth ||4;//默认描边宽度是2px
+	        this.fillStyle=option.fillStyle||'red';
+	    },
+	    render:function(ctx){
+	        ctx.save();//保存当前的状态
+	
+	        ctx.beginPath();
+	        ctx.translate(this.x,this.y);
+	
+	        ctx.rotate(this.rotation*Math.PI/180);
+	        ctx.globalAlpha=this.opacity;
+	        ctx.scale(this.scaleX,this.scaleY);
+	        ctx.fillStyle=this.fillStyle;
+	        ctx.strokeStyle=this.strokeStyle;
+	        ctx.moveTo(0,0);
+	        ctx.arc(0,0,this.r,this.sAngle,this.eAngle,this.counterclockwise);
+	        ctx.fill();
+	        ctx.stroke();
+	        ctx.restore();//回归到最初的原始状态
+	    }
+	}
+
+```
++ 为何弧形的rotate()旋转跟矩形的旋转会不一样？？
++ scale(x,y)角度没有缩放,只是半径缩放!
++ demo19.html，
 
 ##  3.9 画布限定区域绘制(了解)
 + ctx.clip(); 方法从原始画布中剪切任意形状和尺寸
@@ -565,12 +676,12 @@
 + 一般配合绘制环境的保存和还原。
 
 ## 3.10  画布保存64位编码内容(****)
-+ 把canvas绘制的内容输出成base64内容
++ 把canvas绘制的内容输出成base64的图片内容
 + 语法：canvas.toDataURL(type, encoderOptions);
 + 例如：canvas.toDataURL("image/jpg",1);
 + type，设置输出的类型，比如 image/png image/jpeg等
 + encoderOptions： 0-1之间的数字，用于标识输出图片的质量，1表示无损压缩，类型为： image/jpeg 或者image/webp才起作用
-+ 如：
++ 如：demo20.html
 
 ```javascript
 
@@ -590,7 +701,8 @@
 ## 3.11 画布渲染画布(****)
 + context.drawImage(img,x,y);
 + img参数也可以是画布，也就是把一个画布整体的渲染到另外一个画布上
-+ 如：
++ 如：demo21.html
++ canvas优化：可以JS创建隐藏的canvas绘制完之后再绘制到显示的canvas上去，如：demo22.html
 
 ```javascript
 
@@ -621,3 +733,5 @@
 	+ 一般用默认值：10就可以了。除非需要特别长的尖角时，使用此属性
 
 ##3.13  了解贝塞尔曲线
+
+#四 canvas开发库的封装
