@@ -2,34 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>绘制简单的折线图表</title>
+    <title>使用Konva库绘制多个矩形</title>
     <style>
         *{
             margin: 0;
             padding: 0;
-        }
-        .main{
-            width: 600px;
-            margin: 0 auto;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-<div class="main">
-    <canvas id="elm"></canvas>
-    <p id="point"></p>
-</div>
+<script src="src/konva.1.3.0.min.js"></script>
+<div id="container"></div>
 <script>
-    (function(){
-        var canvas=document.querySelector('#elm');
-        var ctx=canvas.getContext('2d');
-        canvas.width=600;
-        canvas.height=500;
-        canvas.style.border='1px solid #000';
+    //1 创建一个舞台
+    var width=window.innerWidth;
+    var height=window.innerHeight;
+    var stage = new Konva.Stage({
+        container: 'container',//挂载的目标元素
+        width: width,//目标元素的宽
+        height: height//高
+    });
 
+    // add canvas element
+    //2  创建一个层
+    var layer = new Konva.Layer();
+    //3 把这个层添加到舞台上去
+    stage.add(layer);
 
+    // create shape
+    //4 创建矩形
+    for(var i=0;i<20;i++){
+        var box = new Konva.Rect({
+            x:Math.random()*width,
+            y:Math.random()*height,
+            width: 100,
+            height: 50,
+            fill: '#00D2FF',
+            stroke: 'black',
+            scaleX:1.2,
+            scaleY:1.2,
+            rotation:30,
+            strokeWidth: 4,
+            draggable: true//绘制的东西是否可以拖动
+        });
+        //5 把这个矩形添加到这个层上去
+        layer.add(box);
+        // add cursor styling
+        box.on('mouseover', function() {
+            document.body.style.cursor = 'pointer';
+        });
+        box.on('mouseout', function() {
+            document.body.style.cursor = 'default';
+        });
+    }
 
-    })()
+    //把这个层渲染
+    layer.draw();
 </script>
 </body>
 </html>
